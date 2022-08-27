@@ -2,12 +2,14 @@ package com.lcy.exam.board.test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class JDBCTest {
     public static void main(String[] args) {
 
         Connection conn = null;
+        PreparedStatement pstat = null;
 
         try{
             Class.forName("com.mysql.jdbc.Driver");
@@ -16,6 +18,15 @@ public class JDBCTest {
 
             conn = DriverManager.getConnection(url, "sbsst", "sbs123414");
             System.out.println("연결 성공");
+            String sql = "INSERT INTO article";
+            sql += " SET regDate = NOW()";
+            sql += ", updateDate = NOW()";
+            sql += ", title = CONCAT(\"제목\", RAND())";
+            sql += ", `body` = CONCAT(\"내용\", RAND());";
+            pstat = conn.prepareStatement(sql);
+            int affectedRows = pstat.executeUpdate();
+
+            System.out.println("affectedRows : " + affectedRows);
 
         }
         catch(ClassNotFoundException e){
